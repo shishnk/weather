@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:weather.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:weather.Models"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="weather.Views.MainWindow"
+        x:DataType="vm:SearchViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="weather">
+
+    <Design.DataContext>
+        <vm:SearchViewModel />
+    </Design.DataContext>
+
+    <Window.DataTemplates>
+        <DataTemplate DataType="{x:Type models:City}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" Margin="0, 0, 10, 0" />
+                <TextBlock Text="{Binding Capital}" Margin="10, 0, 0, 0" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.DataTemplates>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto, Auto">
+            <TextBox x:Name="SearchTextBox" Grid.Column="0" Margin="10" VerticalAlignment="Center"
+                     HorizontalAlignment="Stretch" Text="{Binding SearchBar}" />
+            <Button Grid.Column="1" Margin="10" VerticalAlignment="Center" Content="Search" Command="{Binding Search}"
+                    CommandParameter="{Binding SearchBar}" HotKey="Enter" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <ListBox ItemsSource="{Binding FoundCities}" SelectedItem="{Binding SelectedCity}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:City}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" Margin="0, 0, 10, 0" />
+                            <TextBlock Text="{Binding Capital}" Margin="10, 0, 0, 0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>
