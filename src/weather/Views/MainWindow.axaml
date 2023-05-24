@@ -23,16 +23,16 @@
         </DataTemplate>
     </Window.DataTemplates>
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid ColumnDefinitions="0.5*, *" RowDefinitions="0.2*, *,*">
 
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto, Auto">
-            <TextBox x:Name="SearchTextBox" Grid.Column="0" Margin="10" VerticalAlignment="Center"
-                     HorizontalAlignment="Stretch" Text="{Binding SearchBar}" />
-            <Button Grid.Column="1" Margin="10" VerticalAlignment="Center" Content="Search" Command="{Binding Search}"
-                    CommandParameter="{Binding SearchBar}" HotKey="Enter" />
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" ColumnDefinitions="*, 0.1*">
+            <TextBox Grid.Column="0" VerticalAlignment="Center"
+                     HorizontalAlignment="Stretch" Text="{Binding SearchBar}" Margin="10" />
+            <Button Grid.Column="1" VerticalAlignment="Center" Content="Search" Command="{Binding Search}"
+                    CommandParameter="{Binding SearchBar}" HotKey="Enter" Margin="10" />
         </Grid>
 
-        <Grid Grid.Row="1">
+        <DockPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
             <ListBox ItemsSource="{Binding FoundCities}" SelectedItem="{Binding SelectedCity}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:City}">
@@ -43,6 +43,9 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </Grid>
+        </DockPanel>
+
+        <Image Name="Image" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1"
+               Source="{Binding ImagePath}" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
     </Grid>
 </Window>

@@ -21,6 +21,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview7" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview7" />
+        <PackageReference Include="Mapsui.Avalonia" Version="4.0.0-rc.1" />
         <PackageReference Include="NLog" Version="5.1.4" />
         <PackageReference Include="ReactiveUI.Fody" Version="18.4.44" />
     </ItemGroup>
@@ -29,6 +30,13 @@
         <Content Include="Assets\csv\worldcities.csv">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Assets\images\city.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\images\" />
     </ItemGroup>
 
 </Project>

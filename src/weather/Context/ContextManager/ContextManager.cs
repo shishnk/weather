@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace weather.Logging;
+namespace weather.Context.ContextManager;
 
 public interface IContext
 {
