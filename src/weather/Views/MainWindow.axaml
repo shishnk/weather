@@ -46,6 +46,7 @@
         </DockPanel>
 
         <Image Name="Image" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1"
-               Source="{Binding ImagePath}" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+               Source="{Binding WeatherState.ImagePath, FallbackValue=''}" />
+
     </Grid>
 </Window>

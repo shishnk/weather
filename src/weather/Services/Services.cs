@@ -1,4 +1,5 @@
-﻿using weather.Context.ContextManager;
+﻿using Newtonsoft.Json;
+using weather.Context.ContextManager;
 using weather.Models;
 
 namespace weather.Services;
@@ -14,7 +15,7 @@ public interface IWeatherService : IService
 
 public interface IImageService : IService
 {
-    public Task<string> SaveImage(City city);
+    public Task<WeatherDescriptor> UpdateImage(City city);
 }
 
 public class WeatherService : IWeatherService
@@ -51,36 +52,21 @@ public class WeatherService : IWeatherService
 
 public class ImageService : IImageService, IDisposable
 {
-    private const string SavePath = @"\Assets\images\city.png";
     private const string Url = @"https://wttr.in/";
-    private const string ImageFormat = ".png";
-
     private readonly HttpClient _client = new();
 
-    public async Task<string> SaveImage(City city)
+    public async Task<WeatherDescriptor> UpdateImage(City city)
     {
-        var imageUrl = Path.Combine(Url, city.Name + ImageFormat);
+        var url = Path.Combine(Url, city.Name + "?format=j1");
 
-        var response = await _client.GetAsync(imageUrl);
+        var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
 
-        await using var imageStream = await response.Content.ReadAsStreamAsync();
-        await using var fileStream =
-            File.Create(Environment.CurrentDirectory + SavePath);
-        await imageStream.CopyToAsync(fileStream);
+        var weatherDesc = JsonConvert.DeserializeObject<WeatherDescriptor>(json) ??
+                          throw new JsonSerializationException("Bad deserialization weather description");
 
-        ContextManager.Context.Logger.Info("Image saved");
-
-        return SavePath;
-
-        // var url = $"https://wttr.in/{Uri.EscapeDataString("Novosibirsk")}?format=%C+%t+%w";
-        //
-        // using var client = new HttpClient();
-        // var response = await client.GetAsync(url);
-        // response.EnsureSuccessStatusCode();
-        //
-        // var weatherData = await response.Content.ReadAsStringAsync();
-        // return weatherData;
+        return weatherDesc;
     }
 
     public void Dispose() => _client.Dispose();

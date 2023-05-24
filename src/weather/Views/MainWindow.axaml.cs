@@ -12,10 +12,9 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
     {
         InitializeComponent();
         this.WhenActivated(disposables =>
-            ViewModel!.UpdateImage.Subscribe(path =>
+            this.WhenAnyValue(t => t.ViewModel!.WeatherState).WhereNotNull().Subscribe(weatherState =>
                 {
-                    if (string.IsNullOrEmpty(path)) return;
-                    Image.Source = new Bitmap(Environment.CurrentDirectory + path);
+                    Image.Source = new Bitmap(Environment.CurrentDirectory + weatherState.ImagePath);
                     Image.InvalidateVisual();
                 })
                 .DisposeWith(disposables));

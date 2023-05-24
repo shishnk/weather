@@ -10,20 +10,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-preview7" />
+        <PackageReference Include="Avalonia" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-preview7"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview7" />
-        <PackageReference Include="Mapsui.Avalonia" Version="4.0.0-rc.1" />
-        <PackageReference Include="NLog" Version="5.1.4" />
-        <PackageReference Include="ReactiveUI.Fody" Version="18.4.44" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview7"/>
+        <PackageReference Include="Mapsui.Avalonia" Version="4.0.0-rc.1"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="NLog" Version="5.1.4"/>
+        <PackageReference Include="ReactiveUI.Fody" Version="18.4.44"/>
+        <PackageReference Include="System.Composition" Version="8.0.0-preview.2.23128.3"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -33,10 +35,14 @@
         <Content Include="Assets\images\city.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Assets\weather-states\sunshine.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Assets\images\" />
+        <Folder Include="Assets\images\"/>
+        <Folder Include="Assets\weather-states\"/>
     </ItemGroup>
 
 </Project>
