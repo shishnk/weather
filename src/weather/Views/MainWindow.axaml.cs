@@ -12,10 +12,9 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
     {
         InitializeComponent();
         this.WhenActivated(disposables =>
-            ViewModel!.UpdateImage.Subscribe(path =>
+            ViewModel!.UpdateImage.Subscribe(bitmap =>
                 {
-                    if (string.IsNullOrEmpty(path)) return;
-                    Image.Source = new Bitmap(Environment.CurrentDirectory + path);
+                    Image.Source = bitmap;
                     Image.InvalidateVisual();
                 })
                 .DisposeWith(disposables));

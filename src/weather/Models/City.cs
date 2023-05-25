@@ -1,4 +1,6 @@
-﻿namespace weather.Models;
+﻿using System.Globalization;
+
+namespace weather.Models;
 
 public class City
 {
@@ -24,6 +26,7 @@ public class City
         const int capitalKey = 4;
 
         var parts = line.Split(',');
-        return new(parts[nameKey], parts[capitalKey], double.Parse(parts[latKey]), double.Parse(parts[longKey]));
+        return new(parts[nameKey], parts[capitalKey], double.Parse(parts[latKey], CultureInfo.InvariantCulture),
+            double.Parse(parts[longKey], CultureInfo.InvariantCulture));
     }
 }

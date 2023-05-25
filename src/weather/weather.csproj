@@ -30,13 +30,6 @@
         <Content Include="Assets\csv\worldcities.csv">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Assets\images\city.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Assets\images\" />
     </ItemGroup>
 
 </Project>
