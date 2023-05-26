@@ -29,5 +29,6 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
                     SvgImage.InvalidateVisual();
                 })
                 .DisposeWith(disposables));
+        MapControl.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
     }
 }

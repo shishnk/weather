@@ -19,7 +19,7 @@ public class WeatherDescriptorJsonConverter : JsonConverter
         var temperature = mainToken.SelectToken("current_condition[0].temp_C")?.Value<int>() ??
                           throw new JsonSerializationException("No temperature property");
         var weatherState = mainToken.SelectToken("current_condition[0].weatherDesc[0].value")?.Value<string>() ??
-                           throw new JsonSerializationException("No weather state property");
+                           throw new JsonSerializationException("No weatherPreview state property");
         var feelTemperuate = mainToken.SelectToken("current_condition[0].FeelsLikeC")?.Value<int>() ??
                              throw new JsonSerializationException("No FeelsLikeC property");
         var pressure = mainToken.SelectToken("current_condition[0].pressureInches")?.Value<int>() ??
@@ -31,7 +31,7 @@ public class WeatherDescriptorJsonConverter : JsonConverter
         var uvIndex = mainToken.SelectToken("current_condition[0].uvIndex")?.Value<int>() ??
                       throw new JsonSerializationException("No uvIndex property");
 
-        ContextManager.Context.Logger.Info("Recieve weather state: " + weatherState);
+        ContextManager.Context.Logger.Info("Recieve weatherPreview state: " + weatherState);
 
         return new WeatherDescriptor
         {

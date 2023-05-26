@@ -1,11 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="weather.App"
-             RequestedThemeVariant="Light">
-    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             x:Class="weather.App">
 
     <Application.Styles>
-        <FluentTheme />
+        <FluentTheme Mode="Light"/>
         <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml" />
     </Application.Styles>
 </Application>
