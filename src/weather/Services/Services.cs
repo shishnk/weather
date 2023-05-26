@@ -63,7 +63,7 @@ public class WeatherService : IWeatherService, IDisposable
 
         ContextManager.Context.Logger.Info("Command update image is executed");
         return JsonConvert.DeserializeObject<WeatherDescriptor>(json) ??
-               throw new JsonSerializationException("Bad deserialization weatherPreview description");
+               throw new JsonSerializationException("Bad deserialization weather description");
     }
 
     public void Dispose() => _client.Dispose();

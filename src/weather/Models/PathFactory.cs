@@ -21,6 +21,6 @@ public static class PathFactory
                 @"/Assets/weather-states/partlyCloudy.svg"),
             WeatherState.Overcast => (@"/Assets/weather-backgrounds/sunshineBackground.png",
                 @"/Assets/weather-states/overcast.svg"),
-            _ => throw new ArgumentOutOfRangeException(nameof(state), "Unknown weatherPreview state")
+            _ => throw new ArgumentOutOfRangeException(nameof(state), "Unknown weather state")
         };
 }
