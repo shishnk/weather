@@ -16,16 +16,16 @@ public class SearchViewModel : ReactiveObject
     [Reactive] public City? SelectedCity { get; set; }
     [ObservableAsProperty] public WeatherDescriptor? WeatherDescriptor { get; }
     [Reactive] public IWeatherState? WeatherState { get; private set; }
+    public ICityService CityService { get; }
     public IWeatherService WeatherService { get; }
-    public IImageService ImageService { get; }
     public ObservableCollection<City> FoundCities { get; }
     public ReactiveCommand<string, Unit> Search { get; }
     public ReactiveCommand<City, WeatherDescriptor> UpdateWeather { get; }
 
-    public SearchViewModel(IWeatherService? weatherService = null, IImageService? imageService = null)
+    public SearchViewModel(IWeatherService? weatherService = null, ICityService? cityService = null)
     {
         WeatherService = weatherService ?? Locator.Current.GetService<IWeatherService>()!;
-        ImageService = imageService ?? Locator.Current.GetService<IImageService>()!;
+        CityService = cityService ?? Locator.Current.GetService<ICityService>()!;
         FoundCities = new();
 
         Search = ReactiveCommand.CreateFromTask<string, Unit>(async name =>
@@ -33,7 +33,7 @@ public class SearchViewModel : ReactiveObject
                 {
                     FoundCities.Clear();
 
-                    await foreach (var city in WeatherService.SearchCity(name)) FoundCities.Add(city);
+                    await foreach (var city in CityService.SearchCity(name)) FoundCities.Add(city);
 
                     if (!FoundCities.Any())
                     {
@@ -51,7 +51,7 @@ public class SearchViewModel : ReactiveObject
         Search.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
 
         UpdateWeather = ReactiveCommand.CreateFromTask<City, WeatherDescriptor>(
-            async city => await Task.Run(async () => await ImageService.UpdateImage(city)),
+            async city => await Task.Run(async () => await WeatherService.UpdateWeather(city)),
             canExecute: this.WhenAnyValue(t => t.SelectedCity).Select(city => city is not null));
         UpdateWeather.ToPropertyEx(this, t => t.WeatherDescriptor);
         UpdateWeather.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));

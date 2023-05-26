@@ -1,5 +1,6 @@
 using System.Globalization;
 using Avalonia.Data.Converters;
+using weather.Models;
 
 namespace weather.Infrastructure;
 
@@ -82,6 +83,15 @@ public class IntToHumidityAsStringConverter : IValueConverter
         if (value is int humidity) return $"\t{humidity}%";
         return string.Empty;
     }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
+public class CityParametersToCityFullNameAsString : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is not City city ? string.Empty : $"{city.Name}, {city.Country}, {city.CountryIso}";
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotImplementedException();

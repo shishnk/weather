@@ -10,24 +10,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Controls.Skia" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-preview7" />
+        <PackageReference Include="Avalonia" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Controls.Skia" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-preview7"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview7" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="2.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="NLog" Version="5.1.4" />
-        <PackageReference Include="ReactiveUI.Fody" Version="18.4.44" />
-        <PackageReference Include="System.Composition" Version="8.0.0-preview.2.23128.3" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview7"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview7"/>
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.0.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="NLog" Version="5.1.4"/>
+        <PackageReference Include="ReactiveUI.Fody" Version="18.4.44"/>
+        <PackageReference Include="System.Composition" Version="8.0.0-preview.2.23128.3"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -56,6 +56,24 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Assets\weather-states\thunder.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\cloudyBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\foggyBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\rainingBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\snowyBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\sunshineBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\thunderBackground.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

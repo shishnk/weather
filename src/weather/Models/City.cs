@@ -3,17 +3,19 @@
 public class City
 {
     public string Name { get; init; }
-    public string Capital { get; init; }
+    public string Country { get; init; }
     public double Latitude { get; init; }
     public double Longitude { get; init; }
+    public string CountryIso { get; init; }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public City(string name, string capital, double latitude, double longitude)
+    public City(string name, string country, double latitude, double longitude, string countryIso)
     {
         Name = name;
-        Capital = capital;
+        Country = country;
         Latitude = latitude;
         Longitude = longitude;
+        CountryIso = countryIso;
     }
 
     public static City Parse(string line)
@@ -21,9 +23,12 @@ public class City
         const int nameKey = 0;
         const int latKey = 2;
         const int longKey = 3;
-        const int capitalKey = 4;
+        const int countryKey = 4;
+        const int countryIsoKey = 5;
+
 
         var parts = line.Split(',');
-        return new(parts[nameKey], parts[capitalKey], double.Parse(parts[latKey]), double.Parse(parts[longKey]));
+        return new(parts[nameKey], parts[countryKey], double.Parse(parts[latKey]),
+            double.Parse(parts[longKey]), parts[countryIsoKey]);
     }
 }

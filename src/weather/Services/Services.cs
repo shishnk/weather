@@ -8,17 +8,17 @@ public interface IService
 {
 }
 
-public interface IWeatherService : IService
+public interface ICityService : IService
 {
     public IAsyncEnumerable<City> SearchCity(string cityName);
 }
 
-public interface IImageService : IService
+public interface IWeatherService : IService
 {
-    public Task<WeatherDescriptor> UpdateImage(City city);
+    public Task<WeatherDescriptor> UpdateWeather(City city);
 }
 
-public class WeatherService : IWeatherService
+public class CityService : ICityService
 {
     private const string FilePath = "Assets/csv/worldcities.csv";
 
@@ -48,12 +48,12 @@ public class WeatherService : IWeatherService
     }
 }
 
-public class ImageService : IImageService, IDisposable
+public class WeatherService : IWeatherService, IDisposable
 {
     private const string Url = @"https://wttr.in/";
     private readonly HttpClient _client = new();
 
-    public async Task<WeatherDescriptor> UpdateImage(City city)
+    public async Task<WeatherDescriptor> UpdateWeather(City city)
     {
         var url = Path.Combine(Url, city.Name + "?format=j1");
 

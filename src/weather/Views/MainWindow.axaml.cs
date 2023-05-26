@@ -1,4 +1,5 @@
 using System.Reactive.Disposables;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -15,10 +16,16 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
         this.WhenActivated(disposables =>
             this.WhenAnyValue(t => t.ViewModel!.WeatherState).WhereNotNull().Subscribe(weatherState =>
                 {
-                    // StateImage.Source =
-                    // new Bitmap(Environment.CurrentDirectory + PathFactory.GetImagePath(weatherState.State));
-                    // StateImage.InvalidateVisual();
-                    SvgImage.Path = Environment.CurrentDirectory + PathFactory.GetImagePath(weatherState.State);
+                    Border.Background = new ImageBrush
+                    {
+                        Source = new Bitmap(Environment.CurrentDirectory +
+                                            PathFactory.GetImagePath(weatherState.State)
+                                                .BackgroundPath),
+                        Stretch = Stretch.UniformToFill
+                    };
+                    Border.InvalidateVisual();
+                    SvgImage.Path = Environment.CurrentDirectory +
+                                    PathFactory.GetImagePath(weatherState.State).ForegroundPath;
                     SvgImage.InvalidateVisual();
                 })
                 .DisposeWith(disposables));
