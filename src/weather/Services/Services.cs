@@ -1,4 +1,4 @@
-﻿using Avalonia.Media.Imaging;
+using Newtonsoft.Json;
 using weather.Context.ContextManager;
 using weather.Models;
 
@@ -8,17 +8,17 @@ public interface IService
 {
 }
 
-public interface IWeatherService : IService
+public interface ICityService : IService
 {
     public IAsyncEnumerable<City> SearchCity(string cityName);
 }
 
-public interface IImageService : IService
+public interface IWeatherService : IService
 {
-    public Task<Bitmap> UpdateImage(City city);
+    public Task<WeatherDescriptor> UpdateWeather(City city);
 }
 
-public class WeatherService : IWeatherService
+public class CityService : ICityService
 {
     private const string FilePath = "Assets/csv/worldcities.csv";
 
@@ -45,29 +45,25 @@ public class WeatherService : IWeatherService
                 yield return City.Parse(line);
             }
         }
-
-        ContextManager.Context.Logger.Debug($"Command search city is executed. City by name \"{cityName}\" not found.");
     }
 }
 
-public class ImageService : IImageService, IDisposable
+public class WeatherService : IWeatherService, IDisposable
 {
     private const string Url = @"https://wttr.in/";
-    private const string ImageFormat = ".png";
-
     private readonly HttpClient _client = new();
 
-    public async Task<Bitmap> UpdateImage(City city)
+    public async Task<WeatherDescriptor> UpdateWeather(City city)
     {
-        var imageUrl = Path.Combine(Url, city.Name + ImageFormat);
+        var url = Path.Combine(Url, city.Name + "?format=j1");
 
-        var response = await _client.GetAsync(imageUrl);
+        var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
 
-        await using var imageStream = await response.Content.ReadAsStreamAsync();
-
-        ContextManager.Context.Logger.Info("Image saved");
-        return new(imageStream);
+        ContextManager.Context.Logger.Info("Command update image is executed");
+        return JsonConvert.DeserializeObject<WeatherDescriptor>(json) ??
+               throw new JsonSerializationException("Bad deserialization weatherPreview description");
     }
 
     public void Dispose() => _client.Dispose();

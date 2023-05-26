@@ -4,48 +4,190 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:weather.Models"
+        xmlns:material="using:Material.Icons.Avalonia"
+        xmlns:converters="clr-namespace:weather.Infrastructure"
+        xmlns:avalonia="clr-namespace:Mapsui.UI.Avalonia;assembly=Mapsui.UI.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="weather.Views.MainWindow"
         x:DataType="vm:SearchViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="weather">
+        Title="weather"
+        MinHeight="400" MinWidth="800">
 
     <Design.DataContext>
         <vm:SearchViewModel />
     </Design.DataContext>
 
+    <Window.Resources>
+        <converters:IntToTemperatureAsStringConverter x:Key="IntToTemperatureAsStringConverter" />
+        <converters:IntToFeelsTemperatureAsStringConverter x:Key="IntToFeelsTemperatureAsStringConverter" />
+        <converters:IntToHumidityAsStringConverter x:Key="IntToHumidityAsStringConverter" />
+        <converters:IntToWindAsStringConverter x:Key="IntToWindAsStringConverter" />
+        <converters:IntToUvIndexAsStringConverter x:Key="IntToUvIndexAsStringConverter" />
+        <converters:IntToPressureAsStringConverter x:Key="IntToPressureAsStringConverter" />
+        <converters:IntToVisibilityAsStringConverter x:Key="IntToVisibilityAsStringConverter" />
+        <converters:CityParametersToCityFullNameAsString x:Key="CityParametersToCityFullNameAsString" />
+    </Window.Resources>
+
     <Window.DataTemplates>
         <DataTemplate DataType="{x:Type models:City}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Name}" Margin="0, 0, 10, 0" />
-                <TextBlock Text="{Binding Capital}" Margin="10, 0, 0, 0" />
+                <TextBlock Text="{Binding Country}" Margin="10, 0, 0, 0" />
             </StackPanel>
         </DataTemplate>
     </Window.DataTemplates>
 
-    <Grid ColumnDefinitions="0.5*, *" RowDefinitions="0.2*, *,*">
+    <Grid Background="#fbe4ea">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" ColumnDefinitions="*, 0.1*">
-            <TextBox Grid.Column="0" VerticalAlignment="Center"
-                     HorizontalAlignment="Stretch" Text="{Binding SearchBar}" Margin="10" />
-            <Button Grid.Column="1" VerticalAlignment="Center" Content="Search" Command="{Binding Search}"
-                    CommandParameter="{Binding SearchBar}" HotKey="Enter" Margin="10" />
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="0.1*" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                     Text="{Binding SearchBar}"
+                     Margin="3, 7, 0, 5" CornerRadius="10" />
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Search"
+                    Margin="5, 5, 5 , 5" BorderThickness="1" BorderBrush="Black" VerticalContentAlignment="Center"
+                    CornerRadius="10" Background="PeachPuff" Command="{Binding Search}"
+                    CommandParameter="{Binding SearchBar}" HotKey="Enter" />
         </Grid>
 
-        <DockPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
-            <ListBox ItemsSource="{Binding FoundCities}" SelectedItem="{Binding SelectedCity}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type models:City}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" Margin="0, 0, 10, 0" />
-                            <TextBlock Text="{Binding Capital}" Margin="10, 0, 0, 0" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </DockPanel>
+        <ListBox Grid.Column="0" Grid.Row="1" CornerRadius="12" Margin="5, 5,5 ,4" Background="#fffcfa"
+                 Items="{Binding FoundCities}" SelectedItem="{Binding SelectedCity}" />
 
-        <Image Name="Image" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1"
-               Source="{Binding Image}" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+        <Border Grid.Column="1" Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.35*" />
+                    <RowDefinition Height="0.5*" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="0" BorderBrush="Black"
+                        BorderThickness="0.5"
+                        CornerRadius="10" Margin="10" Name="Border">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                        </Grid.RowDefinitions>
+                        <!-- Text="15°" -->
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding SelectedCity, Converter={StaticResource CityParametersToCityFullNameAsString}}"
+                                FontSize="10"
+                                FontWeight="Bold" Margin="5, 25, 0, 0" VerticalAlignment="Center"
+                                HorizontalAlignment="Center" Foreground="WhiteSmoke" />
+                            <TextBlock
+                                Text="{Binding WeatherDescriptor.Temperature,  Converter={StaticResource IntToTemperatureAsStringConverter}}"
+                                FontSize="12"
+                                FontWeight="Bold" Margin="5, 10, 0, 0" VerticalAlignment="Center"
+                                HorizontalAlignment="Center" Foreground="WhiteSmoke" />
+                            <TextBlock
+                                Text="{Binding WeatherDescriptor.FeelTemperature, Converter={StaticResource IntToFeelsTemperatureAsStringConverter}}"
+                                FontSize="15"
+                                FontWeight="Heavy" HorizontalAlignment="Center"
+                                VerticalAlignment="Top" Margin="5, 15, 0, 0" Foreground="WhiteSmoke" />
+                            <TextBlock Text="{Binding WeatherDescriptor.WeatherStateAlias}" FontSize="15"
+                                       FontWeight="Heavy" HorizontalAlignment="Center"
+                                       VerticalAlignment="Top" Margin="5, 3, 0, 0" Foreground="WhiteSmoke"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Svg Grid.Column="1" Name="SvgImage" Margin="0,0,0,25" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" BorderBrush="Black"
+                        BorderThickness="0.5"
+                        CornerRadius="10" Margin="10" Background="#f4bb95">
+                    <Grid VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0, 8, 0, 20" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <material:MaterialIcon Kind="Temperature" Foreground="Indigo" Margin="2, 14,0 ,0" />
+                                <TextBlock Text="Temperature" HorizontalAlignment="Left" FontSize="14"
+                                           TextDecorations="Underline"
+                                           Margin="2, 15, 0, 0" />
+                                <TextBlock
+                                    Text="{Binding WeatherDescriptor.Temperature, Converter={StaticResource IntToTemperatureAsStringConverter}}"
+                                    HorizontalAlignment="Right" FontSize="14"
+                                    Margin="10, 15, 0, 0" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <material:MaterialIcon Kind="WaterPercent" Foreground="Indigo" Margin="2, 14,0 ,0" />
+                                <TextBlock Text="Humidity" HorizontalAlignment="Right" FontSize="14"
+                                           Margin="2, 15, 0, 0" TextDecorations="Underline" />
+                                <TextBlock
+                                    Text="{Binding WeatherDescriptor.Humidity, Converter={StaticResource IntToHumidityAsStringConverter}}"
+                                    HorizontalAlignment="Right" FontSize="14"
+                                    Margin="10, 15, 0, 0" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <material:MaterialIcon Kind="Wiper" Foreground="Indigo" Margin="2, 14,0 ,0" />
+                                <TextBlock Text="Pressure" HorizontalAlignment="Right" FontSize="14"
+                                           Margin="2, 15, 0, 0" TextDecorations="Underline" />
+                                <TextBlock
+                                    Text="{Binding WeatherDescriptor.Pressure, Converter={StaticResource IntToPressureAsStringConverter}}"
+                                    HorizontalAlignment="Left" FontSize="14"
+                                    Margin="10, 15, 0, 0" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0, 8, 0, 20" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <material:MaterialIcon Kind="WeatherWindy" Foreground="Indigo" Margin="2, 14,0 ,0" />
+                                <TextBlock Text="Wind" HorizontalAlignment="Right" FontSize="14" Margin="4, 15, 0, 0"
+                                           TextDecorations="Underline" />
+                                <TextBlock
+                                    Text="{Binding WeatherDescriptor.Wind, Converter={StaticResource IntToWindAsStringConverter}}"
+                                    HorizontalAlignment="Right" FontSize="14"
+                                    Margin="10, 15, 0, 0" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <material:MaterialIcon Kind="VisibilityOutline" Foreground="Indigo" Margin="2, 14,0 ,0" />
+                                <TextBlock Text="Visibility" HorizontalAlignment="Right" FontSize="14"
+                                           Margin="4, 15, 0, 0" TextDecorations="Underline" />
+                                <TextBlock
+                                    Text="{Binding WeatherDescriptor.Visibility, Converter={StaticResource IntToVisibilityAsStringConverter}}"
+                                    HorizontalAlignment="Left" FontSize="14"
+                                    Margin="10, 15, 0, 0" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <material:MaterialIcon Kind="HeatIndex" Foreground="Indigo" Margin="2, 14,0 ,0" />
+                                <TextBlock Text="UV Index" HorizontalAlignment="Right" FontSize="14"
+                                           Margin="4, 15, 0, 0" TextDecorations="Underline" />
+                                <TextBlock
+                                    Text="{Binding WeatherDescriptor.UvIndex, Converter={StaticResource IntToUvIndexAsStringConverter}}"
+                                    HorizontalAlignment="Right" FontSize="14"
+                                    Margin="10, 15, 0, 0" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="10" BorderBrush="Black"
+                        BorderThickness="1" Padding="4">
+                    <avalonia:MapControl Name="MapControl" />
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

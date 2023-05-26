@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
@@ -10,24 +10,76 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-preview7" />
+        <ProjectCapability Include="Avalonia" />
+        <TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.21" />
+        <PackageReference Include="Avalonia.Controls.Skia" Version="0.10.18" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.21" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview7" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview7" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.21" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.21" />
+        <PackageReference Include="Avalonia.Svg.Skia" Version="0.10.18" />
         <PackageReference Include="Mapsui.Avalonia" Version="4.0.0-rc.1" />
-        <PackageReference Include="NLog" Version="5.1.4" />
+        <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="NLog" Version="5.1.5" />
         <PackageReference Include="ReactiveUI.Fody" Version="18.4.44" />
+        <PackageReference Include="System.Composition" Version="8.0.0-preview.4.23259.5" />
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="Assets\csv\worldcities.csv">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\sunshine.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\cloudy.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\foggy.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\overcast.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\partlyCloudy.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\raining.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\snowy.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-states\thunder.svg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\cloudyBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\foggyBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\rainingBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\snowyBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\sunshineBackground.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\weather-backgrounds\thunderBackground.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
