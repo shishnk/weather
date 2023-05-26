@@ -1,7 +1,9 @@
 using System.Reactive.Disposables;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
+using MessageBox.Avalonia;
 using ReactiveUI;
 using weather.Models;
 using weather.ViewModels;
@@ -44,6 +46,41 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
                 }
             }).DisposeWith(disposables);
             ViewModel.UpdateWeather.Subscribe(_ => InfoBorder.Child.IsVisible = true).DisposeWith(disposables);
+            ViewModel.SaveFileDialog.RegisterHandler(async interaction =>
+            {
+                var filter = new FileDialogFilter
+                {
+                    Name = "PNG Files (.png)",
+                    Extensions = new() { "png" }
+                };
+                var dialog = new SaveFileDialog
+                {
+                    Filters = new() { filter }
+                };
+
+                var messageBox1 =
+                    MessageBoxManager.GetMessageBoxStandardWindow("Warning message",
+                        "File path is empty");
+                var messageBox2 =
+                    MessageBoxManager.GetMessageBoxStandardWindow("Warning message",
+                        "City not selected");
+
+                if (ViewModel.SelectedCity is null)
+                {
+                    await messageBox2.Show();
+                    return;
+                }
+
+                var result = await dialog.ShowAsync(this);
+
+                if (result is null)
+                {
+                    await messageBox1.Show();
+                    return;
+                }
+
+                interaction.SetOutput((result, ViewModel.SelectedCity));
+            }).DisposeWith(disposables);
         });
         MapControl.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
         ProgressRing.IsVisible = false;

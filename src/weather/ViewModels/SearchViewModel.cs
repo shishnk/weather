@@ -18,15 +18,22 @@ public class SearchViewModel : ReactiveObject
     [Reactive] public IWeatherState? WeatherState { get; private set; }
     public ICityService CityService { get; }
     public IWeatherService WeatherService { get; }
+    public IImageService ImageService { get; }
     public ObservableCollection<City> FoundCities { get; }
     public ReactiveCommand<string, Unit> Search { get; }
     public ReactiveCommand<City, WeatherDescriptor> UpdateWeather { get; }
+    public ReactiveCommand<Unit, Unit> SaveFile { get; }
+    public ReactiveCommand<(string, City), Unit> SaveWeather { get; }
+    public Interaction<Unit, (string, City)> SaveFileDialog { get; }
 
-    public SearchViewModel(IWeatherService? weatherService = null, ICityService? cityService = null)
+    public SearchViewModel(IWeatherService? weatherService = null, ICityService? cityService = null,
+        IImageService? imageService = null)
     {
         WeatherService = weatherService ?? Locator.Current.GetService<IWeatherService>()!;
         CityService = cityService ?? Locator.Current.GetService<ICityService>()!;
+        ImageService = imageService ?? Locator.Current.GetService<IImageService>()!;
         FoundCities = new();
+        SaveFileDialog = new();
 
         Search = ReactiveCommand.CreateFromTask<string, Unit>(async name =>
                 await Task.Run(async () =>
@@ -56,9 +63,21 @@ public class SearchViewModel : ReactiveObject
         UpdateWeather.ToPropertyEx(this, t => t.WeatherDescriptor);
         UpdateWeather.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
 
+        SaveFile = ReactiveCommand.CreateFromTask(SaveFileImpl);
+        SaveWeather = ReactiveCommand.CreateFromTask<(string, City)>(async parameters =>
+            await Task.Run(async () => await ImageService.SaveImage(parameters.Item1, parameters.Item2)));
+        SaveFile.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
+        SaveWeather.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
+
         this.WhenAnyValue(t => t.SelectedCity).WhereNotNull()
             .Subscribe(city => UpdateWeather.Execute(city).Subscribe());
         this.WhenAnyValue(t => t.WeatherDescriptor).WhereNotNull()
             .Subscribe(desc => WeatherState = WeatherStateFactory.GetWeatherStateByAlias(desc.WeatherStateAlias));
+    }
+
+    private async Task SaveFileImpl()
+    {
+        var (filePath, city) = await SaveFileDialog.Handle(Unit.Default);
+        SaveWeather.Execute((filePath, city)).Subscribe();
     }
 }

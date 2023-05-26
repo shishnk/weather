@@ -161,7 +161,7 @@ public class Sunshine : IWeatherState
     new[]
     {
         "ThunderyShowers", "ThunderyHeavyRain", "ThunderySnowShowers", "ThunderyOutbreaksPossible",
-        "LightRainWithThunderstorm", "Thunderstorm", "RainAndHailWithThunderstorm"
+        "LightRainWithThunderstorm", "Thunderstorm", "RainAndHailWithThunderstorm", "RainWithThunderStorm"
     })]
 public class Thunder : IWeatherState
 {
@@ -176,6 +176,7 @@ public class Thunder : IWeatherState
             yield return "LightRainWithThunderstorm";
             yield return "Thunderstorm";
             yield return "RainAndHailWithThunderstorm";
+            yield return "RainWithThunderstorm";
         }
     }
 

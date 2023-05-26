@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Newtonsoft.Json;
 using weather.Context.ContextManager;
 using weather.Models;
@@ -16,6 +17,11 @@ public interface ICityService : IService
 public interface IWeatherService : IService
 {
     public Task<WeatherDescriptor> UpdateWeather(City city);
+}
+
+public interface IImageService : IService
+{
+    public Task SaveImage(string path, City city);
 }
 
 public class CityService : ICityService
@@ -64,6 +70,35 @@ public class WeatherService : IWeatherService, IDisposable
         ContextManager.Context.Logger.Info("Command update image is executed");
         return JsonConvert.DeserializeObject<WeatherDescriptor>(json) ??
                throw new JsonSerializationException("Bad deserialization weather description");
+    }
+
+    public void Dispose() => _client.Dispose();
+}
+
+public class ImageService : IImageService, IDisposable
+{
+    private const string Url = @"https://wttr.in/";
+    private const string ImageFormat = ".png";
+
+    private readonly HttpClient _client = new();
+
+    public async Task SaveImage(string path, City city)
+    {
+        var imageUrl = Path.Combine(Url, city.Name + ImageFormat);
+
+        var ext = Path.GetExtension(path);
+
+        if (string.IsNullOrWhiteSpace(ext)) path += ImageFormat;
+        if (ext == ".") path += ImageFormat.Split('.')[1];
+
+        var response = await _client.GetAsync(imageUrl);
+        response.EnsureSuccessStatusCode();
+
+        await using var imageStream = await response.Content.ReadAsStreamAsync();
+        await using var fileStream = File.Create(path);
+        await imageStream.CopyToAsync(fileStream);
+
+        ContextManager.Context.Logger.Info($"Image saved to path \"{path}\"");
     }
 
     public void Dispose() => _client.Dispose();
