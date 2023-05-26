@@ -1,4 +1,4 @@
-﻿namespace weather.Models;
+namespace weather.Models;
 
 public class City
 {
