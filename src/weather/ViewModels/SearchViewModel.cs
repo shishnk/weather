@@ -15,7 +15,7 @@ public class SearchViewModel : ReactiveObject
     [Reactive] public string? SearchBar { get; set; }
     [Reactive] public City? SelectedCity { get; set; }
     [ObservableAsProperty] public WeatherDescriptor? WeatherDescriptor { get; }
-    [Reactive] public IWeatherState? WeatherState { get; protected set; }
+    [Reactive] public IWeatherState? WeatherState { get; private set; }
     public IWeatherService WeatherService { get; }
     public IImageService ImageService { get; }
     public ObservableCollection<City> FoundCities { get; }
@@ -32,9 +32,18 @@ public class SearchViewModel : ReactiveObject
                 await Task.Run(async () =>
                 {
                     FoundCities.Clear();
+
                     await foreach (var city in WeatherService.SearchCity(name)) FoundCities.Add(city);
+
+                    if (!FoundCities.Any())
+                    {
+                        ContextManager.Context.Logger.Debug(
+                            $"Command search city is executed. City by name \"{name}\" not found.");
+                    }
+
                     ContextManager.Context.Logger.Debug(
                         $"Command search city is executed. Cities found: {FoundCities.Count}");
+
                     return Unit.Default;
                 }),
             canExecute: this.WhenAnyValue(t => t.SearchBar)
@@ -50,6 +59,6 @@ public class SearchViewModel : ReactiveObject
         this.WhenAnyValue(t => t.SelectedCity).WhereNotNull()
             .Subscribe(city => UpdateWeather.Execute(city).Subscribe());
         this.WhenAnyValue(t => t.WeatherDescriptor).WhereNotNull()
-            .Subscribe(desc => WeatherState = WeatherStateFactory.GetWeatherState(desc.State)!);
+            .Subscribe(desc => WeatherState = WeatherStateFactory.GetWeatherStateByAlias(desc.WeatherStateAlias));
     }
 }

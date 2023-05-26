@@ -45,8 +45,6 @@ public class WeatherService : IWeatherService
                 yield return City.Parse(line);
             }
         }
-
-        ContextManager.Context.Logger.Debug($"Command search city is executed. City by name \"{cityName}\" not found.");
     }
 }
 
@@ -63,10 +61,9 @@ public class ImageService : IImageService, IDisposable
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();
 
-        var weatherDesc = JsonConvert.DeserializeObject<WeatherDescriptor>(json) ??
-                          throw new JsonSerializationException("Bad deserialization weather description");
-
-        return weatherDesc;
+        ContextManager.Context.Logger.Info("Command update image is executed");
+        return JsonConvert.DeserializeObject<WeatherDescriptor>(json) ??
+               throw new JsonSerializationException("Bad deserialization weather description");
     }
 
     public void Dispose() => _client.Dispose();

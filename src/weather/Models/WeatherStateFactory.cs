@@ -13,9 +13,7 @@ public enum WeatherState
     Raining,
     Snowy,
     Sunshine,
-    Thunder,
-    Windy,
-    None
+    Thunder
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
@@ -24,6 +22,9 @@ public class WeatherStateMetadata
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public WeatherState State { get; set; }
+
+    // ReSharper disable once UnusedMember.Global
+    public IEnumerable<string> Aliases { get; set; } = Enumerable.Empty<string>();
 }
 
 public static class WeatherStateFactory
@@ -55,14 +56,17 @@ public static class WeatherStateFactory
         container.SatisfyImports(_info);
     }
 
-    public static IWeatherState? GetWeatherState(WeatherState state)
+    public static IWeatherState? GetWeatherStateByAlias(string alias)
     {
+        alias = alias.Replace(" ", "").Split(',').First();
         var weatherState =
-            _info.WeatherStates.FirstOrDefault(@object => @object.Metadata.State == state);
+            _info.WeatherStates.FirstOrDefault(weatherState =>
+                weatherState.Metadata.Aliases.Contains(alias.Replace(" ", ""),
+                    StringComparer.InvariantCultureIgnoreCase));
 
         if (weatherState is not null) return weatherState.Value;
 
-        ContextManager.Context.Logger.Error($"Weather state \"{state}\" doesnt exist");
+        ContextManager.Context.Logger.Error($"Weather state by alias \"{alias}\" doesnt exist");
         return null;
     }
 }

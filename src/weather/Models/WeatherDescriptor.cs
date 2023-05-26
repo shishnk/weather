@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using weather.Context.ContextManager;
 
 namespace weather.Models;
 
@@ -19,19 +20,29 @@ public class WeatherDescriptorJsonConverter : JsonConverter
                           throw new JsonSerializationException("No temperature property");
         var weatherState = mainToken.SelectToken("current_condition[0].weatherDesc[0].value")?.Value<string>() ??
                            throw new JsonSerializationException("No weather state property");
+        var feelTemperuate = mainToken.SelectToken("current_condition[0].FeelsLikeC")?.Value<int>() ??
+                             throw new JsonSerializationException("No FeelsLikeC property");
+        var pressure = mainToken.SelectToken("current_condition[0].pressureInches")?.Value<int>() ??
+                       throw new JsonSerializationException("No pressureInches property");
+        var visibilityMiles = mainToken.SelectToken("current_condition[0].visibilityMiles")?.Value<int>() ??
+                              throw new JsonSerializationException("No visibilityMiles property");
+        var wind = mainToken.SelectToken("current_condition[0].windspeedKmph")?.Value<int>() ??
+                   throw new JsonSerializationException("No windspeedKmph property");
+        var uvIndex = mainToken.SelectToken("current_condition[0].uvIndex")?.Value<int>() ??
+                      throw new JsonSerializationException("No uvIndex property");
 
-        var resultState = WeatherState.None;
-
-        if (Enum.GetNames(typeof(WeatherState)).Contains(weatherState))
-        {
-            resultState = (WeatherState)Enum.Parse(typeof(WeatherState), weatherState);
-        }
+        ContextManager.Context.Logger.Info("Recieve weather state: " + weatherState);
 
         return new WeatherDescriptor
         {
             Humidity = humidity,
             Temperature = temperature,
-            State = resultState
+            FeelTemperature = feelTemperuate,
+            Pressure = pressure,
+            Visibility = visibilityMiles,
+            Wind = wind,
+            UvIndex = uvIndex,
+            WeatherStateAlias = weatherState
         };
     }
 
@@ -43,6 +54,11 @@ public class WeatherDescriptorJsonConverter : JsonConverter
 public class WeatherDescriptor
 {
     public required int Temperature { get; init; }
+    public required int FeelTemperature { get; init; }
     public required int Humidity { get; init; }
-    public required WeatherState State { get; init; }
+    public required int Pressure { get; init; }
+    public required int Visibility { get; init; }
+    public required int Wind { get; init; }
+    public required int UvIndex { get; init; }
+    public required string WeatherStateAlias { get; init; }
 }
