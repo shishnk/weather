@@ -83,7 +83,7 @@ public class SearchViewModel : ReactiveObject
             .WhereNotNull()
             .Subscribe(desc => WeatherState = WeatherStateFactory.GetWeatherStateByAlias(desc.WeatherStateAlias));
         this.WhenAnyValue(t => t.SearchBar)
-            .Throttle(TimeSpan.FromSeconds(0.3), RxApp.TaskpoolScheduler)
+            .Throttle(TimeSpan.FromSeconds(0.4), RxApp.TaskpoolScheduler)
             .DistinctUntilChanged()
             .ObserveOn(RxApp.MainThreadScheduler)
             .InvokeCommand(Search!);

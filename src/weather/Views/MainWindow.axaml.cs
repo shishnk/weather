@@ -3,22 +3,37 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
+using Mapsui;
+using Mapsui.Extensions;
+using Mapsui.Layers;
+using Mapsui.Nts;
+using Mapsui.Projections;
+using Mapsui.Styles;
+using Mapsui.Tiling;
+using Mapsui.Widgets;
+using Mapsui.Widgets.ScaleBar;
 using MessageBox.Avalonia;
+using NetTopologySuite.Geometries;
 using ReactiveUI;
 using weather.Context.ContextManager;
 using weather.Models;
 using weather.ViewModels;
+using Color = Mapsui.Styles.Color;
 
 namespace weather.Views;
 
 public partial class MainWindow : ReactiveWindow<SearchViewModel>
 {
+    private readonly GenericCollectionLayer<List<IFeature>> _layer;
+
     public MainWindow()
     {
         InitializeComponent();
         this.WhenActivated(disposables =>
         {
-            this.WhenAnyValue(t => t.ViewModel!.WeatherState).WhereNotNull().Subscribe(weatherState =>
+            this.WhenAnyValue(t => t.ViewModel!.WeatherState)
+                .WhereNotNull()
+                .Subscribe(weatherState =>
                 {
                     Border.Background = new ImageBrush
                     {
@@ -33,6 +48,20 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
                     SvgImage.InvalidateVisual();
                 })
                 .DisposeWith(disposables);
+            this.WhenAnyValue(t => t.ViewModel!.SelectedCity)
+                .WhereNotNull().Subscribe(selectedCity =>
+                {
+                    _layer?.Features.Clear();
+                    var (x, y) = SphericalMercator.FromLonLat(selectedCity.Longitude, selectedCity.Latitude);
+                    _layer?.Features.Add(new GeometryFeature
+                    {
+                        Geometry = new Point(x, y)
+                    });
+                    _layer?.DataHasChanged();
+                    MapControl.Map.Home = navigator =>
+                        navigator.CenterOnAndZoomTo(new(x, y), navigator.Resolutions[10]); // for first render
+                    MapControl.Map.Navigator.CenterOnAndZoomTo(new(x, y), MapControl.Map.Navigator.Resolutions[10]);
+                }).DisposeWith(disposables);
             ViewModel!.UpdateWeather.IsExecuting.Subscribe(isExecuting =>
             {
                 if (isExecuting)
@@ -87,9 +116,22 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
                 NoInformationTextBlock.IsVisible = true;
                 HideElements();
                 ContextManager.Context.Logger.Error(ex.Message);
-            });
+            }).DisposeWith(disposables);
         });
-        MapControl.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
+
+        MapControl.Map.Layers.Add(OpenStreetMap.CreateTileLayer());
+        _layer = new()
+        {
+            Style = SymbolStyles.CreatePinStyle()
+        };
+        MapControl.Map.Layers.Add(_layer);
+        MapControl.Map.Widgets.Add(new ScaleBarWidget(MapControl.Map)
+        {
+            TextAlignment = Alignment.Center,
+            HorizontalAlignment = Mapsui.Widgets.HorizontalAlignment.Center,
+            VerticalAlignment = Mapsui.Widgets.VerticalAlignment.Top
+        });
+        MapControl.Map.BackColor = Color.Black;
         HideElements();
     }
 
