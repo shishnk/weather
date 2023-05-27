@@ -30,6 +30,10 @@
         <converters:CityParametersToCityFullNameAsString x:Key="CityParametersToCityFullNameAsString" />
     </Window.Resources>
 
+    <Window.Styles>
+        <StyleInclude Source="/Styles/TextStyles.axaml"></StyleInclude>
+    </Window.Styles>
+
     <Window.DataTemplates>
         <DataTemplate DataType="{x:Type models:City}">
             <StackPanel Orientation="Horizontal">
@@ -60,7 +64,7 @@
             </Grid>
 
             <ListBox Grid.Column="0" Grid.Row="1" CornerRadius="12" Margin="5, 5,5 ,4" Background="#fffcfa"
-                     Items="{Binding FoundCities}" SelectedItem="{Binding SelectedCity}" />
+                     Items="{Binding FoundCities}" SelectedItem="{Binding SelectedCity}" Name="ListBox" />
 
             <avaloniaProgressRing:ProgressRing Grid.Column="1" Grid.Row="1" Width="80"
                                                Height="80"
@@ -79,16 +83,12 @@
                             CornerRadius="10" Margin="10" Name="Border">
                         <Grid ColumnDefinitions="*,*">
                             <StackPanel Grid.Column="0">
-                                <TextBlock
-                                    Text="{Binding SelectedCity, Converter={StaticResource CityParametersToCityFullNameAsString}}"
-                                    FontSize="10"
-                                    FontWeight="Bold" Margin="5, 25, 0, 0" VerticalAlignment="Center"
-                                    HorizontalAlignment="Center" Foreground="WhiteSmoke" />
-                                <TextBlock
-                                    Text="{Binding WeatherDescriptor.Temperature,  Converter={StaticResource IntToTemperatureAsStringConverter}}"
-                                    FontSize="12"
-                                    FontWeight="Bold" Margin="5, 10, 0, 0" VerticalAlignment="Center"
-                                    HorizontalAlignment="Center" Foreground="WhiteSmoke" />
+                                <TextBlock Classes="MainInfo"
+                                           Text="{Binding SelectedCity, Converter={StaticResource CityParametersToCityFullNameAsString}}"
+                                           FontSize="10" Margin="5, 25, 0, 0" />
+                                <TextBlock Classes="MainInfo"
+                                           Text="{Binding WeatherDescriptor.Temperature,  Converter={StaticResource IntToTemperatureAsStringConverter}}"
+                                           FontSize="12" Margin="5, 10, 0, 0" />
                                 <TextBlock
                                     Text="{Binding WeatherDescriptor.FeelTemperature, Converter={StaticResource IntToFeelsTemperatureAsStringConverter}}"
                                     FontSize="15"
@@ -109,64 +109,55 @@
                         <Grid VerticalAlignment="Top" ColumnDefinitions="*,*">
                             <StackPanel Grid.Column="0" Margin="0, 8, 0, 20" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <material:MaterialIcon Kind="Temperature" Foreground="Indigo" Margin="2, 14,0 ,0" />
-                                    <TextBlock Text="Temperature" HorizontalAlignment="Left" FontSize="14"
-                                               TextDecorations="Underline"
+                                    <material:MaterialIcon Classes="MaterialIconStyle" Kind="Temperature" />
+                                    <TextBlock Classes="SubInfo" Text="Temperature" HorizontalAlignment="Left"
                                                Margin="2, 15, 0, 0" />
-                                    <TextBlock
-                                        Text="{Binding WeatherDescriptor.Temperature, Converter={StaticResource IntToTemperatureAsStringConverter}}"
-                                        HorizontalAlignment="Right" FontSize="14"
-                                        Margin="10, 15, 0, 0" />
+                                    <TextBlock Classes="BindingStyle"
+                                               Text="{Binding WeatherDescriptor.Temperature, Converter={StaticResource IntToTemperatureAsStringConverter}}"
+                                               HorizontalAlignment="Right" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <material:MaterialIcon Kind="WaterPercent" Foreground="Indigo" Margin="2, 14,0 ,0" />
-                                    <TextBlock Text="Humidity" HorizontalAlignment="Right" FontSize="14"
-                                               Margin="2, 15, 0, 0" TextDecorations="Underline" />
-                                    <TextBlock
-                                        Text="{Binding WeatherDescriptor.Humidity, Converter={StaticResource IntToHumidityAsStringConverter}}"
-                                        HorizontalAlignment="Right" FontSize="14"
-                                        Margin="10, 15, 0, 0" />
+                                    <material:MaterialIcon Classes="MaterialIconStyle" Kind="WaterPercent" />
+                                    <TextBlock Classes="SubInfo" Text="Humidity" HorizontalAlignment="Right"
+                                               Margin="2, 15, 0, 0" />
+                                    <TextBlock Classes="BindingStyle"
+                                               Text="{Binding WeatherDescriptor.Humidity, Converter={StaticResource IntToHumidityAsStringConverter}}"
+                                               HorizontalAlignment="Right" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <material:MaterialIcon Kind="Wiper" Foreground="Indigo" Margin="2, 14,0 ,0" />
-                                    <TextBlock Text="Pressure" HorizontalAlignment="Right" FontSize="14"
-                                               Margin="2, 15, 0, 0" TextDecorations="Underline" />
-                                    <TextBlock
-                                        Text="{Binding WeatherDescriptor.Pressure, Converter={StaticResource IntToPressureAsStringConverter}}"
-                                        HorizontalAlignment="Left" FontSize="14"
-                                        Margin="10, 15, 0, 0" />
+                                    <material:MaterialIcon Classes="MaterialIconStyle" Kind="Wiper" />
+                                    <TextBlock Classes="SubInfo" Text="Pressure" HorizontalAlignment="Right"
+                                               Margin="2, 15, 0, 0" />
+                                    <TextBlock Classes="BindingStyle"
+                                               Text="{Binding WeatherDescriptor.Pressure, Converter={StaticResource IntToPressureAsStringConverter}}"
+                                               HorizontalAlignment="Left" />
                                 </StackPanel>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Margin="0, 8, 0, 20" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <material:MaterialIcon Kind="WeatherWindy" Foreground="Indigo" Margin="2, 14,0 ,0" />
-                                    <TextBlock Text="Wind" HorizontalAlignment="Right" FontSize="14"
-                                               Margin="4, 15, 0, 0"
-                                               TextDecorations="Underline" />
-                                    <TextBlock
-                                        Text="{Binding WeatherDescriptor.Wind, Converter={StaticResource IntToWindAsStringConverter}}"
-                                        HorizontalAlignment="Right" FontSize="14"
-                                        Margin="10, 15, 0, 0" />
+                                    <material:MaterialIcon Classes="MaterialIconStyle" Kind="WeatherWindy" />
+                                    <TextBlock Classes="SubInfo" Text="Wind" HorizontalAlignment="Right"
+                                               Margin="4, 15, 0, 0" />
+                                    <TextBlock Classes="BindingStyle"
+                                               Text="{Binding WeatherDescriptor.Wind, Converter={StaticResource IntToWindAsStringConverter}}"
+                                               HorizontalAlignment="Right" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <material:MaterialIcon Kind="VisibilityOutline" Foreground="Indigo"
-                                                           Margin="2, 14,0 ,0" />
-                                    <TextBlock Text="Visibility" HorizontalAlignment="Right" FontSize="14"
-                                               Margin="4, 15, 0, 0" TextDecorations="Underline" />
-                                    <TextBlock
-                                        Text="{Binding WeatherDescriptor.Visibility, Converter={StaticResource IntToVisibilityAsStringConverter}}"
-                                        HorizontalAlignment="Left" FontSize="14"
-                                        Margin="10, 15, 0, 0" />
+                                    <material:MaterialIcon Classes="MaterialIconStyle" Kind="VisibilityOutline" />
+                                    <TextBlock Classes="SubInfo" Text="Visibility" HorizontalAlignment="Right"
+                                               Margin="4, 15, 0, 0" />
+                                    <TextBlock Classes="BindingStyle"
+                                               Text="{Binding WeatherDescriptor.Visibility, Converter={StaticResource IntToVisibilityAsStringConverter}}"
+                                               HorizontalAlignment="Left" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <material:MaterialIcon Kind="HeatIndex" Foreground="Indigo" Margin="2, 14,0 ,0" />
-                                    <TextBlock Text="UV Index" HorizontalAlignment="Right" FontSize="14"
-                                               Margin="4, 15, 0, 0" TextDecorations="Underline" />
-                                    <TextBlock
-                                        Text="{Binding WeatherDescriptor.UvIndex, Converter={StaticResource IntToUvIndexAsStringConverter}}"
-                                        HorizontalAlignment="Right" FontSize="14"
-                                        Margin="10, 15, 0, 0" />
+                                    <material:MaterialIcon Classes="MaterialIconStyle" Kind="HeatIndex" />
+                                    <TextBlock Classes="SubInfo" Text="UV Index" HorizontalAlignment="Right"
+                                               Margin="4, 15, 0, 0" />
+                                    <TextBlock Classes="BindingStyle"
+                                               Text="{Binding WeatherDescriptor.UvIndex, Converter={StaticResource IntToUvIndexAsStringConverter}}"
+                                               HorizontalAlignment="Right" />
                                 </StackPanel>
                             </StackPanel>
                         </Grid>

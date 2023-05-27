@@ -13,12 +13,11 @@ using Mapsui.Tiling;
 using Mapsui.Widgets;
 using Mapsui.Widgets.ScaleBar;
 using MessageBox.Avalonia;
-using NetTopologySuite.Geometries;
 using ReactiveUI;
 using weather.Context.ContextManager;
 using weather.Models;
 using weather.ViewModels;
-using Color = Mapsui.Styles.Color;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace weather.Views;
 
@@ -131,7 +130,7 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
             HorizontalAlignment = Mapsui.Widgets.HorizontalAlignment.Center,
             VerticalAlignment = Mapsui.Widgets.VerticalAlignment.Top
         });
-        MapControl.Map.BackColor = Color.Black;
+        MapControl.Map.BackColor = Mapsui.Styles.Color.Black;
         HideElements();
     }
 

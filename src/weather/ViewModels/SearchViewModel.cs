@@ -12,6 +12,8 @@ namespace weather.ViewModels;
 
 public class SearchViewModel : ReactiveObject
 {
+    private IReadOnlyDictionary<(string, string), City>? _citiesDictionary;
+
     [Reactive] public string? SearchBar { get; set; }
     [Reactive] public City? SelectedCity { get; set; }
     [ObservableAsProperty] public WeatherDescriptor? WeatherDescriptor { get; }
@@ -34,15 +36,13 @@ public class SearchViewModel : ReactiveObject
         ImageService = imageService ?? Locator.Current.GetService<IImageService>()!;
         FoundCities = new();
         SaveFileDialog = new();
-        IDictionary<(string, string), City> cities = new Dictionary<(string, string), City>();
-
-        CityService.FillListCities(cities);
+        _citiesDictionary ??= CityService.CreateAndFillCitiesDictionary().Result;
 
         Search = ReactiveCommand.CreateFromTask<string>(async name => await Task.Run(() =>
         {
             FoundCities.Clear();
 
-            foreach (var city in cities)
+            foreach (var city in _citiesDictionary)
             {
                 if (city.Key.Item1.Contains(name, StringComparison.InvariantCultureIgnoreCase))
                 {

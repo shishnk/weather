@@ -10,7 +10,7 @@ public interface IService
 
 public interface ICityService : IService
 {
-    public void FillListCities(IDictionary<(string, string), City> cities);
+    public Task<IReadOnlyDictionary<(string, string), City>> CreateAndFillCitiesDictionary();
 }
 
 public interface IWeatherService : IService
@@ -27,7 +27,7 @@ public class CityService : ICityService
 {
     private const string FilePath = "Assets/csv/worldcities.csv";
 
-    public async void FillListCities(IDictionary<(string, string), City> cities)
+    public async Task<IReadOnlyDictionary<(string, string), City>> CreateAndFillCitiesDictionary()
     {
         const int cityNameKey = 0;
         const int idKey = 10;
@@ -37,11 +37,13 @@ public class CityService : ICityService
             throw new FileNotFoundException($"File with path \"{FilePath}\" doesnt exist");
         }
 
+        var dictionary = new Dictionary<(string, string), City>();
+
         using var sr = new StreamReader(FilePath);
 
         while (!sr.EndOfStream)
         {
-            var line = await sr.ReadLineAsync();
+            var line = await sr.ReadLineAsync().ConfigureAwait(false);
 
             if (line is null)
             {
@@ -50,10 +52,11 @@ public class CityService : ICityService
 
             var lines = line.Split(',');
 
-            cities[(lines[cityNameKey], lines[idKey])] = City.Parse(line);
+            dictionary[(lines[cityNameKey], lines[idKey])] = City.Parse(line);
         }
 
         ContextManager.Context.Logger.Info("Filled list cities");
+        return dictionary;
     }
 }
 
