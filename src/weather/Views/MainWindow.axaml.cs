@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.ReactiveUI;
 using MessageBox.Avalonia;
 using ReactiveUI;
+using weather.Context.ContextManager;
 using weather.Models;
 using weather.ViewModels;
 
@@ -81,8 +82,19 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
 
                 interaction.SetOutput((result, ViewModel.SelectedCity));
             }).DisposeWith(disposables);
+            ViewModel.UpdateWeather.ThrownExceptions.Subscribe(ex =>
+            {
+                NoInformationTextBlock.IsVisible = true;
+                HideElements();
+                ContextManager.Context.Logger.Error(ex.Message);
+            });
         });
         MapControl.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
+        HideElements();
+    }
+
+    private void HideElements()
+    {
         ProgressRing.IsVisible = false;
         InfoBorder.Child.IsVisible = false;
     }

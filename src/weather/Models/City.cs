@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace weather.Models;
 
 public class City
@@ -26,9 +28,8 @@ public class City
         const int countryKey = 4;
         const int countryIsoKey = 5;
 
-
         var parts = line.Split(',');
-        return new(parts[nameKey], parts[countryKey], double.Parse(parts[latKey]),
-            double.Parse(parts[longKey]), parts[countryIsoKey]);
+        return new(parts[nameKey], parts[countryKey], double.Parse(parts[latKey], CultureInfo.InvariantCulture),
+            double.Parse(parts[longKey], CultureInfo.InvariantCulture), parts[countryIsoKey]);
     }
 }

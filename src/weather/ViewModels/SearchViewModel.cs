@@ -34,34 +34,41 @@ public class SearchViewModel : ReactiveObject
         ImageService = imageService ?? Locator.Current.GetService<IImageService>()!;
         FoundCities = new();
         SaveFileDialog = new();
+        IDictionary<(string, string), City> cities = new Dictionary<(string, string), City>();
 
-        Search = ReactiveCommand.CreateFromTask<string, Unit>(async name =>
-                await Task.Run(async () =>
+        CityService.FillListCities(cities);
+
+        Search = ReactiveCommand.CreateFromTask<string>(async name => await Task.Run(() =>
+        {
+            FoundCities.Clear();
+
+            foreach (var city in cities)
+            {
+                if (city.Key.Item1.Contains(name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    FoundCities.Clear();
+                    FoundCities.Add(city.Value);
+                }
+            }
 
-                    await foreach (var city in CityService.SearchCity(name)) FoundCities.Add(city);
+            if (!FoundCities.Any())
+            {
+                ContextManager.Context.Logger.Debug(
+                    $"Command search city is executed. City by name \"{name}\" not found.");
+                return Task.CompletedTask;
+            }
 
-                    if (!FoundCities.Any())
-                    {
-                        ContextManager.Context.Logger.Debug(
-                            $"Command search city is executed. City by name \"{name}\" not found.");
-                    }
+            ContextManager.Context.Logger.Debug(
+                $"Command search city is executed. Cities found: {FoundCities.Count}");
 
-                    ContextManager.Context.Logger.Debug(
-                        $"Command search city is executed. Cities found: {FoundCities.Count}");
-
-                    return Unit.Default;
-                }),
-            canExecute: this.WhenAnyValue(t => t.SearchBar)
-                .Select(result => !string.IsNullOrEmpty(result) && !string.IsNullOrWhiteSpace(result)));
+            return Task.CompletedTask;
+        }), canExecute: this.WhenAnyValue(t => t.SearchBar)
+            .Select(result => !string.IsNullOrEmpty(result) && !string.IsNullOrWhiteSpace(result)));
         Search.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
 
         UpdateWeather = ReactiveCommand.CreateFromTask<City, WeatherDescriptor>(
             async city => await Task.Run(async () => await WeatherService.UpdateWeather(city)),
             canExecute: this.WhenAnyValue(t => t.SelectedCity).Select(city => city is not null));
         UpdateWeather.ToPropertyEx(this, t => t.WeatherDescriptor);
-        UpdateWeather.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
 
         SaveFile = ReactiveCommand.CreateFromTask(SaveFileImpl);
         SaveWeather = ReactiveCommand.CreateFromTask<(string, City)>(async parameters =>
@@ -69,10 +76,17 @@ public class SearchViewModel : ReactiveObject
         SaveFile.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
         SaveWeather.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
 
-        this.WhenAnyValue(t => t.SelectedCity).WhereNotNull()
+        this.WhenAnyValue(t => t.SelectedCity)
+            .WhereNotNull()
             .Subscribe(city => UpdateWeather.Execute(city).Subscribe());
-        this.WhenAnyValue(t => t.WeatherDescriptor).WhereNotNull()
+        this.WhenAnyValue(t => t.WeatherDescriptor)
+            .WhereNotNull()
             .Subscribe(desc => WeatherState = WeatherStateFactory.GetWeatherStateByAlias(desc.WeatherStateAlias));
+        this.WhenAnyValue(t => t.SearchBar)
+            .Throttle(TimeSpan.FromSeconds(0.3), RxApp.TaskpoolScheduler)
+            .DistinctUntilChanged()
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .InvokeCommand(Search!);
     }
 
     private async Task SaveFileImpl()

@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Newtonsoft.Json;
 using weather.Context.ContextManager;
 using weather.Models;
@@ -11,7 +10,7 @@ public interface IService
 
 public interface ICityService : IService
 {
-    public IAsyncEnumerable<City> SearchCity(string cityName);
+    public void FillListCities(IDictionary<(string, string), City> cities);
 }
 
 public interface IWeatherService : IService
@@ -28,8 +27,11 @@ public class CityService : ICityService
 {
     private const string FilePath = "Assets/csv/worldcities.csv";
 
-    public async IAsyncEnumerable<City> SearchCity(string cityName)
+    public async void FillListCities(IDictionary<(string, string), City> cities)
     {
+        const int cityNameKey = 0;
+        const int idKey = 10;
+
         if (!File.Exists(FilePath))
         {
             throw new FileNotFoundException($"File with path \"{FilePath}\" doesnt exist");
@@ -46,11 +48,12 @@ public class CityService : ICityService
                 throw new ArgumentNullException(nameof(line), "Error with reading line from file");
             }
 
-            if (line.Split(',')[0].Contains(cityName, StringComparison.InvariantCultureIgnoreCase))
-            {
-                yield return City.Parse(line);
-            }
+            var lines = line.Split(',');
+
+            cities[(lines[cityNameKey], lines[idKey])] = City.Parse(line);
         }
+
+        ContextManager.Context.Logger.Info("Filled list cities");
     }
 }
 
