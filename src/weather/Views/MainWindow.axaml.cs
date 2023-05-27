@@ -34,16 +34,14 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
                 .WhereNotNull()
                 .Subscribe(weatherState =>
                 {
+                    var (backgroundPath, foregroundPath) = PathFactory.GetImagePath(weatherState.State);
                     Border.Background = new ImageBrush
                     {
-                        Source = new Bitmap(Environment.CurrentDirectory +
-                                            PathFactory.GetImagePath(weatherState.State)
-                                                .BackgroundPath),
+                        Source = new Bitmap(Environment.CurrentDirectory + backgroundPath),
                         Stretch = Stretch.UniformToFill
                     };
                     Border.InvalidateVisual();
-                    SvgImage.Path = Environment.CurrentDirectory +
-                                    PathFactory.GetImagePath(weatherState.State).ForegroundPath;
+                    SvgImage.Path = Environment.CurrentDirectory + foregroundPath;
                     SvgImage.InvalidateVisual();
                 })
                 .DisposeWith(disposables);
