@@ -1,0 +1,26 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia">
+
+    <Style Selector="avalonia|MaterialIcon.MaterialIconStyle">
+        <Setter Property="Foreground" Value="Indigo" />
+        <Setter Property="Margin" Value="2, 14, 0, 0" />
+    </Style>
+
+    <Style Selector="TextBlock.SubInfo">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextDecorations" Value="Underline" />
+    </Style>
+
+    <Style Selector="TextBlock.BindingStyle">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="10, 15, 0, 0" />
+    </Style>
+
+    <Style Selector="TextBlock.MainInfo">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+</Styles>
