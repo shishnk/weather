@@ -1,5 +1,5 @@
 # Program description #
-Software for determining the weather in the city. The [Avalonia](https://www.avaloniaui.net/) ased on the MVVM ([``Model-View-ViewModel``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)) design template was used for implementation.
+Software to view the weather in the city. The [Avalonia](https://www.avaloniaui.net/) platform was chosen for implementation. The project based on the MVVM ([``Model-View-ViewModel``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)) design template.
 ```mermaid
 flowchart LR
    View <--> ViewModel --> Model
