@@ -12,7 +12,7 @@ The [wttr.in](https://github.com/chubin/wttr.in) is used to provide weather, whi
 ## Example of using the program
 
 ### Current weather display
-![](Example/example.png)
+![](example/example.png)
 
 ### Saving the weather for several days
-![](Example/saveWeather.png)
+![](example/saveWeather.png)
