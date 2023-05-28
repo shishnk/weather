@@ -43,11 +43,16 @@
         </DataTemplate>
     </Window.DataTemplates>
 
-    <DockPanel>
-        <Menu DockPanel.Dock="Top" Background="#fbe4ea" Margin="4">
-
-            <MenuItem Header="Save">
-                <MenuItem Header="Save image for a few days" Command="{Binding SaveFile}" />
+    <DockPanel Background="#c1fbe7">
+        <Menu DockPanel.Dock="Top" Background="PeachPuff" Margin="4, 4, 4, 2" CornerRadius="10" BorderBrush="Black"
+              BorderThickness="1" Width="57" HorizontalAlignment="Left" Height="25">
+            <MenuItem Header="Save" CornerRadius="10" HorizontalAlignment="Left">
+                <MenuItem Header="Save image for a few days" Command="{Binding SaveFile}" HotKey="Ctrl+S"
+                          CornerRadius="10">
+                    <MenuItem.Icon>
+                        <material:MaterialIcon Kind="ContentSave" Foreground="Indigo" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
 
@@ -55,10 +60,10 @@
             <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" ColumnDefinitions="*,0.1*">
                 <TextBox Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          Text="{Binding SearchBar}" Watermark="Search..."
-                         Margin="3, 7, 0, 5" CornerRadius="10" />
+                         Margin="3, 0, 0, 5" CornerRadius="10" Height="10" />
                 <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                         Content="Search"
-                        Margin="5, 5, 5 , 5" BorderThickness="1" BorderBrush="Black" VerticalContentAlignment="Center"
+                        Margin="5, 5, 5 , 10" BorderThickness="1" BorderBrush="Black" VerticalContentAlignment="Center"
                         CornerRadius="10" Background="PeachPuff" Command="{Binding Search}"
                         CommandParameter="{Binding SearchBar}" HotKey="Enter" />
             </Grid>
