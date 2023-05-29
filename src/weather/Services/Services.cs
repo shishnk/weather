@@ -43,7 +43,7 @@ public class CityService : ICityService
 
         while (!sr.EndOfStream)
         {
-            var line = await sr.ReadLineAsync().ConfigureAwait(false);
+            var line = await sr.ReadLineAsync();
 
             if (line is null)
             {
@@ -55,7 +55,7 @@ public class CityService : ICityService
             dictionary[(lines[cityNameKey], lines[idKey])] = City.Parse(line);
         }
 
-        ContextManager.Context.Logger.Info("Filled list cities");
+        ContextManager.Context.Logger.Info("The dictionary with the cities filled up");
         return dictionary;
     }
 }

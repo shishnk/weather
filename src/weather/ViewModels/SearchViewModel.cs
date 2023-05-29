@@ -36,7 +36,7 @@ public class SearchViewModel : ReactiveObject
         ImageService = imageService ?? Locator.Current.GetService<IImageService>()!;
         FoundCities = new();
         SaveFileDialog = new();
-        _citiesDictionary ??= CityService.CreateAndFillCitiesDictionary().Result;
+        _citiesDictionary ??= Task.Run(async () => await CityService.CreateAndFillCitiesDictionary()).Result;
 
         Search = ReactiveCommand.CreateFromTask<string>(async name => await Task.Run(() =>
         {
