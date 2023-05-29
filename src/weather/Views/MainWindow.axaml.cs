@@ -85,28 +85,18 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
                     Filters = new() { filter }
                 };
 
-                var messageBox1 =
-                    MessageBoxManager.GetMessageBoxStandardWindow("Warning message",
-                        "File path is empty");
-                var messageBox2 =
+                var messageBox =
                     MessageBoxManager.GetMessageBoxStandardWindow("Warning message",
                         "City not selected");
 
                 if (ViewModel.SelectedCity is null)
                 {
-                    await messageBox2.Show();
+                    await messageBox.ShowDialog(this);
                     return;
                 }
 
                 var result = await dialog.ShowAsync(this);
-
-                if (result is null)
-                {
-                    await messageBox1.Show();
-                    return;
-                }
-
-                interaction.SetOutput((result, ViewModel.SelectedCity));
+                interaction.SetOutput((result!, ViewModel.SelectedCity));
             }).DisposeWith(disposables);
             ViewModel.UpdateWeather.ThrownExceptions.Subscribe(ex =>
             {
