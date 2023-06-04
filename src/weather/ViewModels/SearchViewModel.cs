@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
+using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
@@ -12,16 +13,17 @@ namespace weather.ViewModels;
 
 public class SearchViewModel : ReactiveObject
 {
-    private IReadOnlyDictionary<(string, string), City>? _citiesDictionary;
+    private readonly IReadOnlyDictionary<(string, string), City>? _citiesDictionary;
+    private ReadOnlyObservableCollection<City>? _cities;
 
     [Reactive] public string? SearchBar { get; set; }
     [Reactive] public City? SelectedCity { get; set; }
     [ObservableAsProperty] public WeatherDescriptor? WeatherDescriptor { get; }
     [Reactive] public IWeatherState? WeatherState { get; private set; }
+    public ReadOnlyObservableCollection<City>? Cities => _cities;
     public ICityService CityService { get; }
     public IWeatherService WeatherService { get; }
     public IImageService ImageService { get; }
-    public ObservableCollection<City> FoundCities { get; }
     public ReactiveCommand<string, Unit> Search { get; }
     public ReactiveCommand<City, WeatherDescriptor> UpdateWeather { get; }
     public ReactiveCommand<Unit, Unit> SaveFile { get; }
@@ -34,23 +36,19 @@ public class SearchViewModel : ReactiveObject
         WeatherService = weatherService ?? Locator.Current.GetService<IWeatherService>()!;
         CityService = cityService ?? Locator.Current.GetService<ICityService>()!;
         ImageService = imageService ?? Locator.Current.GetService<IImageService>()!;
-        FoundCities = new();
         SaveFileDialog = new();
         _citiesDictionary ??= Task.Run(async () => await CityService.CreateAndFillCitiesDictionary()).Result;
 
         Search = ReactiveCommand.CreateFromTask<string>(async name => await Task.Run(() =>
         {
-            FoundCities.Clear();
+            _citiesDictionary.AsObservableChangeSet()
+                .Filter(t => t.Value.Name.Contains(name))
+                .Transform(t => t.Value)
+                .Bind(out _cities)
+                .Subscribe();
+            this.RaisePropertyChanged(nameof(Cities));
 
-            foreach (var city in _citiesDictionary)
-            {
-                if (city.Key.Item1.Contains(name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    FoundCities.Add(city.Value);
-                }
-            }
-
-            if (!FoundCities.Any())
+            if (!_cities.Any())
             {
                 ContextManager.Context.Logger.Debug(
                     $"Command search city is executed. City by name \"{name}\" not found.");
@@ -58,8 +56,7 @@ public class SearchViewModel : ReactiveObject
             }
 
             ContextManager.Context.Logger.Debug(
-                $"Command search city is executed. Cities found: {FoundCities.Count}");
-
+                $"Command search city is executed. Cities found: {_cities.Count}");
             return Task.CompletedTask;
         }), canExecute: this.WhenAnyValue(t => t.SearchBar)
             .Select(result => !string.IsNullOrEmpty(result) && !string.IsNullOrWhiteSpace(result)));

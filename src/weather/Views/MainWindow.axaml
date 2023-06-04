@@ -69,7 +69,7 @@
             </Grid>
 
             <ListBox Grid.Column="0" Grid.Row="1" CornerRadius="12" Margin="5, 5,5 ,4" Background="#fffcfa"
-                     Items="{Binding FoundCities}" SelectedItem="{Binding SelectedCity}" Name="ListBox" />
+                     Items="{Binding Cities}" SelectedItem="{Binding SelectedCity}" Name="ListBox" />
 
             <avaloniaProgressRing:ProgressRing Grid.Column="1" Grid.Row="1" Width="80"
                                                Height="80"
