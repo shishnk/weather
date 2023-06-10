@@ -45,12 +45,14 @@ public class ServiceTests
     public async void SaveWeather(string cityName, string cityId)
     {
         var path = Environment.CurrentDirectory + Dir;
+        
+        if (Directory.Exists(path)) Directory.Delete(path, true);
+        
         var directory = Directory.CreateDirectory(path);
-        var fullPath = directory.FullName + cityId;
+        var fullPath = directory.FullName + cityId + ImageFormat;
         await _imageService.SaveImage(fullPath, _citiesDictionary![(cityName, cityId)]);
 
-        // Assert.NotNull(bitmap);
-        Assert.True(File.Exists(fullPath + ImageFormat));
+        Assert.True(File.Exists(fullPath));
         directory.Delete(true);
     }
 }
