@@ -20,21 +20,22 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.21" />
-        <PackageReference Include="Avalonia.Controls.Skia" Version="0.10.18" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.21" />
+        <PackageReference Include="Avalonia" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.Controls.Skia" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-rc1.1" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.21" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.21" />
-        <PackageReference Include="Avalonia.Svg.Skia" Version="0.10.18" />
-        <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.9.9" />
-        <PackageReference Include="Mapsui.Avalonia" Version="4.0.0-rc.1" />
-        <PackageReference Include="MessageBox.Avalonia" Version="2.1.0" />
-        <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.0-preview20230601001" />
+        <PackageReference Include="Mapsui.Avalonia" Version="4.0.0-rc.3" />
+        <PackageReference Include="MessageBox.Avalonia" Version="2.3.1-rc1" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="NLog" Version="5.1.5" />
-        <PackageReference Include="ReactiveUI.Fody" Version="18.4.44" />
+        <PackageReference Include="NLog" Version="5.2.0" />
+        <PackageReference Include="ReactiveUI.Fody" Version="19.2.1" />
         <PackageReference Include="System.Composition" Version="8.0.0-preview.4.23259.5" />
     </ItemGroup>
 

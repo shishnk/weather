@@ -15,7 +15,7 @@ public class ServiceTests
 
     public static IEnumerable<object[]> GetCitiesNamesAndId()
     {
-        _citiesDictionary ??= _service.CreateAndFillCitiesDictionary().Result;
+        _citiesDictionary ??= Task.Run(async () => await _service.CreateAndFillCitiesDictionary()).Result;
 
         return new[]
         {
@@ -49,6 +49,7 @@ public class ServiceTests
         var fullPath = directory.FullName + cityId;
         await _imageService.SaveImage(fullPath, _citiesDictionary![(cityName, cityId)]);
 
+        // Assert.NotNull(bitmap);
         Assert.True(File.Exists(fullPath + ImageFormat));
         directory.Delete(true);
     }

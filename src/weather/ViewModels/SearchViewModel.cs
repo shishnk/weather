@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
+using Avalonia.Media.Imaging;
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -27,7 +28,7 @@ public class SearchViewModel : ReactiveObject
     public ReactiveCommand<string, Unit> Search { get; }
     public ReactiveCommand<City, WeatherDescriptor> UpdateWeather { get; }
     public ReactiveCommand<Unit, Unit> SaveFile { get; }
-    public ReactiveCommand<(string, City), Unit> SaveWeather { get; }
+    public ReactiveCommand<(string?, City), Bitmap?> SaveWeather { get; }
     public Interaction<Unit, (string, City)> SaveFileDialog { get; }
 
     public SearchViewModel(IWeatherService? weatherService = null, ICityService? cityService = null,
@@ -42,7 +43,7 @@ public class SearchViewModel : ReactiveObject
         Search = ReactiveCommand.CreateFromTask<string>(async name => await Task.Run(() =>
         {
             _citiesDictionary.AsObservableChangeSet()
-                .Filter(t => t.Value.Name.Contains(name))
+                .Filter(t => t.Value.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase))
                 .Transform(t => t.Value)
                 .Bind(out _cities)
                 .Subscribe();
@@ -68,7 +69,7 @@ public class SearchViewModel : ReactiveObject
         UpdateWeather.ToPropertyEx(this, t => t.WeatherDescriptor);
 
         SaveFile = ReactiveCommand.CreateFromTask(SaveFileImpl);
-        SaveWeather = ReactiveCommand.CreateFromTask<(string, City)>(async parameters =>
+        SaveWeather = ReactiveCommand.CreateFromTask<(string?, City), Bitmap?>(async parameters =>
             await Task.Run(async () => await ImageService.SaveImage(parameters.Item1, parameters.Item2)));
         SaveFile.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
         SaveWeather.ThrownExceptions.Subscribe(ex => ContextManager.Context.Logger.Error(ex.Message));
