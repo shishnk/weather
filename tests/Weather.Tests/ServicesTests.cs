@@ -15,7 +15,7 @@ public class ServiceTests
 
     public static IEnumerable<object[]> GetCitiesNamesAndId()
     {
-        _citiesDictionary ??= _service.CreateAndFillCitiesDictionary().Result;
+        _citiesDictionary ??= Task.Run(async () => await _service.CreateAndFillCitiesDictionary()).Result;
 
         return new[]
         {
@@ -45,11 +45,14 @@ public class ServiceTests
     public async void SaveWeather(string cityName, string cityId)
     {
         var path = Environment.CurrentDirectory + Dir;
+        
+        if (Directory.Exists(path)) Directory.Delete(path, true);
+        
         var directory = Directory.CreateDirectory(path);
-        var fullPath = directory.FullName + cityId;
+        var fullPath = directory.FullName + cityId + ImageFormat;
         await _imageService.SaveImage(fullPath, _citiesDictionary![(cityName, cityId)]);
 
-        Assert.True(File.Exists(fullPath + ImageFormat));
+        Assert.True(File.Exists(fullPath));
         directory.Delete(true);
     }
 }

@@ -1,3 +1,4 @@
+using Avalonia.Media.Imaging;
 using Newtonsoft.Json;
 using weather.Context.ContextManager;
 using weather.Models;
@@ -20,7 +21,7 @@ public interface IWeatherService : IService
 
 public interface IImageService : IService
 {
-    public Task SaveImage(string path, City city);
+    public Task<Bitmap?> SaveImage(string? path, City city);
 }
 
 public class CityService : ICityService
@@ -88,23 +89,23 @@ public class ImageService : IImageService, IDisposable
 
     private readonly HttpClient _client = new();
 
-    public async Task SaveImage(string path, City city)
+    public async Task<Bitmap?> SaveImage(string? path, City city)
     {
         var imageUrl = Path.Combine(Url, city.Name + ImageFormat);
-
-        var ext = Path.GetExtension(path);
-
-        if (string.IsNullOrWhiteSpace(ext)) path += ImageFormat;
-        if (ext == ".") path += ImageFormat.Split('.')[1];
 
         var response = await _client.GetAsync(imageUrl);
         response.EnsureSuccessStatusCode();
 
         await using var imageStream = await response.Content.ReadAsStreamAsync();
-        await using var fileStream = File.Create(path);
-        await imageStream.CopyToAsync(fileStream);
+
+        if (path is null) return new(imageStream);
+        await using (var fileStream = File.Create(path))
+        {
+            await imageStream.CopyToAsync(fileStream);
+        }
 
         ContextManager.Context.Logger.Info($"Image saved to path \"{path}\"");
+        return null;
     }
 
     public void Dispose() => _client.Dispose();

@@ -49,7 +49,8 @@ public static class WeatherStateFactory
         }
         catch (Exception)
         {
-            // ignored           
+            ContextManager.Context.Logger.Error("Failed to load weather state assemblies");
+            throw;
         }
 
         var container = configuration.CreateContainer();
