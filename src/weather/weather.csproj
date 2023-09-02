@@ -35,7 +35,7 @@
         <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="NLog" Version="5.2.3" />
-        <PackageReference Include="ReactiveUI.Fody" Version="19.2.1" />
+        <PackageReference Include="ReactiveUI.Fody" Version="19.4.1" />
         <PackageReference Include="System.Composition" Version="8.0.0-preview.4.23259.5" />
     </ItemGroup>
 
