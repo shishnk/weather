@@ -31,7 +31,7 @@
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-rc1.1" />
         <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.0-preview20230601001" />
         <PackageReference Include="Mapsui.Avalonia" Version="4.0.0" />
-        <PackageReference Include="MessageBox.Avalonia" Version="2.3.1-rc1" />
+        <PackageReference Include="MessageBox.Avalonia" Version="3.1.4" />
         <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="NLog" Version="5.2.3" />
