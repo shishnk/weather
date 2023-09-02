@@ -28,7 +28,7 @@
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-rc1.1" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-rc1.1" />
         <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0-rc1.1" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
         <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.0-preview20230601001" />
         <PackageReference Include="Mapsui.Avalonia" Version="4.0.0" />
         <PackageReference Include="MessageBox.Avalonia" Version="2.3.1-rc1" />
