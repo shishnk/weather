@@ -15,7 +15,7 @@ using Mapsui.Styles;
 using Mapsui.Tiling;
 using Mapsui.Widgets;
 using Mapsui.Widgets.ScaleBar;
-using MessageBox.Avalonia;
+using MsBox.Avalonia;
 using ReactiveUI;
 using weather.Context.ContextManager;
 using weather.Models;
@@ -83,11 +83,11 @@ public partial class MainWindow : ReactiveWindow<SearchViewModel>
             ViewModel.UpdateWeather.Subscribe(_ => InfoBorder.Child!.IsVisible = true).DisposeWith(disposables);
             ViewModel.SaveFileDialog.RegisterHandler(async interaction =>
             {
-                var messageBox = MessageBoxManager.GetMessageBoxStandardWindow("Warning message", "City not selected");
+                var messageBox = MessageBoxManager.GetMessageBoxStandard("Warning message", "City not selected");
 
                 if (ViewModel.SelectedCity is null)
                 {
-                    await messageBox.ShowDialog(this);
+                    await messageBox.ShowAsPopupAsync(this);
                     return;
                 }
 
